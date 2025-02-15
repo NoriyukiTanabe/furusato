@@ -1,27 +1,87 @@
-# React + TypeScript + Vite
+# ふるさと納税の計算方法
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 必要な情報（源泉徴収票から確認）
+### 収入関連
+- 支払金額（源泉徴収票の「支払金額」欄）
+- 給与所得控除後の金額（源泉徴収票の「給与所得控除後の金額」欄）
 
-Currently, two official plugins are available:
+### 所得控除関連
+- 社会保険料等の金額（源泉徴収票の「社会保険料等の金額」欄）
+- 生命保険料の控除額（源泉徴収票の「生命保険料の控除額」欄）
+- 地震保険料の控除額（源泉徴収票の「地震保険料の控除額」欄）
+- 配偶者控除の額（源泉徴収票の「配偶者控除の額」欄）
+- 扶養控除の額（源泉徴収票の「扶養控除の額」欄）
+- 基礎控除の額（源泉徴収票の「基礎控除の額」欄）
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 税額関連
+- 算出税額（源泉徴収票の「算出税額」欄）
+- 所得税及び復興特別所得税の源泉徴収税額（源泉徴収票の「源泉徴収税額」欄）
+- 市区町村民税・都道府県民税の額（住民税決定通知書または前年の課税額）
 
-## Expanding the ESLint configuration
+## 計算手順
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 1. 所得税の控除額の計算
+1. 寄附金控除額の計算
+   ```
+   寄附金控除額 = (ふるさと納税額 - 2,000円) × 所得税率 × 102.1%
+   ```
+   ※所得税率は所得に応じて5%～45%
+   ※復興特別所得税として所得税額の2.1%が上乗せされます（2013年から2037年まで）
 
-- Configure the top-level `parserOptions` property like this:
+### 2. 住民税の控除額の計算
+1. 基本控除額の計算
+   ```
+   基本控除額 = (ふるさと納税額 - 2,000円) × 個人住民税率
+   ```
+   ※個人住民税率は一律10%（都道府県民税4%、市町村民税6%）
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+2. 特例控除額の計算
+   ```
+   特例控除額 = 住民税所得割額 × 20%
+   ```
+
+### 3. 最大限度額の計算
+```
+最大限度額 = 住民税所得割額 × 20%
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### 4. 実質的な自己負担額の計算
+```
+実質的な自己負担額 = ふるさと納税額 - (所得税の控除額 + 住民税の控除額)
+```
+※適切に限度額内で寄附を行った場合、原則として2,000円
+
+## 具体例
+
+年収700万円（独身）のケース：
+1. 給与所得控除後の給与収入：約500万円
+2. 所得控除（社会保険料等）：約100万円
+3. 課税所得：約400万円
+4. 住民税所得割額：約40万円
+5. ふるさと納税の上限額：約8万円（40万円×20%）
+
+この場合：
+- 寄附可能上限額：約8万円
+- 実質負担額：2,000円
+- 控除される税額：約7.8万円（8万円-2,000円）
+
+## 注意事項
+
+1. 確定申告の期限
+   - 寄附を行った年の翌年の3月15日まで
+
+2. 復興特別所得税について
+   - 東日本大震災からの復興財源確保のため、2013年から2037年まで所得税額に2.1%が上乗せされています
+   - ふるさと納税の所得税控除額を計算する際も、この2.1%を考慮する必要があります
+
+3. 控除の対象となる寄附金
+   - 自治体が指定する返礼品の調達費用は3割以下
+   - 返礼品の送付費用は別途自治体が負担
+
+4. 寄附金受領証明書
+   - 確定申告には寄附金受領証明書が必要
+
+5. 計算上の注意点
+   - 実際の控除額は、所得や他の控除などにより変動
+   - 確定申告時に正確な控除額が計算される
+   - 上記の計算式は簡易的な目安として参考にすること
