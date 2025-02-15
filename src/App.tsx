@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { calculateFurusato } from './utils/furusatoCalculator'
 
 function App() {
   const [annualIncome, setAnnualIncome] = useState<number>(0)
@@ -9,20 +10,9 @@ function App() {
     actualCost: number;
   } | null>(null)
 
-  const calculateFurusato = () => {
-    // 基礎控除額（住民税所得割額の20%）の簡易計算
-    const estimatedResidentTax = annualIncome * 0.1 // 住民税率を10%と仮定
-    const maxDonation = Math.floor(estimatedResidentTax * 0.2) // 住民税所得割額の20%
-
-    // 実質負担額の計算（2,000円）
-    const taxBenefit = maxDonation - 2000
-    const actualCost = 2000
-
-    setResult({
-      maxDonation,
-      taxBenefit,
-      actualCost,
-    })
+  const handleCalculate = () => {
+    const result = calculateFurusato(annualIncome, dependents)
+    setResult(result)
   }
 
   return (
@@ -61,7 +51,7 @@ function App() {
             </div>
           </div>
           <button
-            onClick={calculateFurusato}
+            onClick={handleCalculate}
             className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transform hover:scale-[1.02] transition-all duration-200 font-semibold text-lg shadow-lg"
           >
             計算する
