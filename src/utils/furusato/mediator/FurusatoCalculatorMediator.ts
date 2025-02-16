@@ -11,13 +11,22 @@ export class FurusatoCalculatorMediator {
    * ふるさと納税の計算を実行する
    * @param annualIncome - 年間所得額
    * @param dependents - 扶養家族の人数
+   * @param socialInsurance - 社会保険料支払額
+   * @param medicalExpenses - 医療費支払額
    * @returns ふるさと納税の計算結果（上限額、控除額、実質負担額）
    */
-  static calculate(annualIncome: number, dependents: number): FurusatoResult {
+  static calculate(
+    annualIncome: number,
+    dependents: number,
+    socialInsurance: number,
+    medicalExpenses: number
+  ): FurusatoResult {
     // 課税対象所得を計算
     const taxableIncome = TaxableIncomeCalculator.calculate({
       annualIncome,
-      dependents
+      dependents,
+      socialInsurance,
+      medicalExpenses
     });
 
     // 住民税所得割額を計算

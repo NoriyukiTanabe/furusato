@@ -9,17 +9,22 @@ import { DeductionCalculator } from './DeductionCalculator';
 export class TaxableIncomeCalculator {
   /**
    * 課税対象所得を計算する
-   * @param params - 計算に必要なパラメータ（年間所得額と扶養家族数）
+   * @param params - 計算に必要なパラメータ
    * @returns 課税対象所得額
    */
   static calculate(params: TaxableIncomeParams): number {
-    const { annualIncome, dependents } = params;
+    const { annualIncome, dependents, socialInsurance, medicalExpenses } = params;
     
     // 給与所得控除を計算
     const employmentDeduction = EmploymentIncomeCalculator.calculate(annualIncome);
     
     // その他の控除額を計算
-    const totalDeductions = DeductionCalculator.calculate(dependents);
+    const totalDeductions = DeductionCalculator.calculate(
+      dependents,
+      socialInsurance,
+      medicalExpenses,
+      annualIncome
+    );
     
     // 課税対象所得を計算（マイナスにならないよう0円で下限を設定）
     return Math.max(0, annualIncome - employmentDeduction - totalDeductions);

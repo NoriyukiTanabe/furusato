@@ -21,4 +21,10 @@ export interface TaxableIncomeParams {
   
   /** 扶養家族の人数 */
   dependents: number;
+
+  /** 社会保険料支払額 */
+  socialInsurance: number;
+
+  /** 医療費支払額 */
+  medicalExpenses: number;
 } 

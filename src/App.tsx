@@ -5,6 +5,8 @@ function App() {
   const [annualIncomeDisplay, setAnnualIncomeDisplay] = useState<string>('')
   const [annualIncome, setAnnualIncome] = useState<number>(0)
   const [dependents, setDependents] = useState<number>(0)
+  const [socialInsurance, setSocialInsurance] = useState<number>(0)
+  const [medicalExpenses, setMedicalExpenses] = useState<number>(0)
   const [result, setResult] = useState<{
     maxDonation: number;
     taxBenefit: number;
@@ -29,7 +31,12 @@ function App() {
   }
 
   const handleCalculate = () => {
-    const result = calculateFurusato(annualIncome * 10000, dependents)
+    const result = calculateFurusato(
+      annualIncome * 10000,
+      dependents,
+      socialInsurance,
+      medicalExpenses
+    )
     setResult(result)
   }
 
@@ -65,6 +72,32 @@ function App() {
                 min="0"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50"
                 placeholder="例：2"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700">
+                社会保険料（年間）
+              </label>
+              <input
+                type="number"
+                value={socialInsurance}
+                onChange={(e) => setSocialInsurance(Number(e.target.value))}
+                min="0"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50"
+                placeholder="例：500000"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700">
+                医療費（年間）
+              </label>
+              <input
+                type="number"
+                value={medicalExpenses}
+                onChange={(e) => setMedicalExpenses(Number(e.target.value))}
+                min="0"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50"
+                placeholder="例：200000"
               />
             </div>
           </div>
