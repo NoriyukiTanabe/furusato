@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { calculateFurusato } from './utils/furusatoCalculator'
+import { calculateFurusato } from './utils/furusato'
 
 function App() {
   const [annualIncome, setAnnualIncome] = useState<number>(0)
