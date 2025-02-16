@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { calculateFurusato } from './utils/furusato'
 
 function App() {
+  const [annualIncomeDisplay, setAnnualIncomeDisplay] = useState<string>('')
   const [annualIncome, setAnnualIncome] = useState<number>(0)
   const [dependents, setDependents] = useState<number>(0)
   const [result, setResult] = useState<{
@@ -10,8 +11,25 @@ function App() {
     actualCost: number;
   } | null>(null)
 
+  const handleAnnualIncomeChange = (value: string) => {
+    // カンマを除去して数値のみにする
+    const numericValue = value.replace(/,/g, '')
+    if (numericValue === '') {
+      setAnnualIncome(0)
+      setAnnualIncomeDisplay('')
+      return
+    }
+    
+    const number = Number(numericValue)
+    if (!isNaN(number)) {
+      setAnnualIncome(number)
+      // 3桁区切りでカンマを追加
+      setAnnualIncomeDisplay(number.toLocaleString())
+    }
+  }
+
   const handleCalculate = () => {
-    const result = calculateFurusato(annualIncome, dependents)
+    const result = calculateFurusato(annualIncome * 10000, dependents)
     setResult(result)
   }
 
@@ -28,10 +46,10 @@ function App() {
                 年収（万円）
               </label>
               <input
-                type="number"
-                value={annualIncome}
-                onChange={(e) => setAnnualIncome(Number(e.target.value))}
-                min="0"
+                type="text"
+                inputMode="numeric"
+                value={annualIncomeDisplay}
+                onChange={(e) => handleAnnualIncomeChange(e.target.value)}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50"
                 placeholder="例：400"
               />
