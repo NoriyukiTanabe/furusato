@@ -8,9 +8,6 @@ export const DEDUCTION_AMOUNTS = {
   /** 扶養控除額（1人あたり年間） */
   DEPENDENT: 380000,
   
-  /** ふるさと納税の最小負担額 */
-  MINIMUM_DONATION_COST: 2000,
-  
   /** 住民税の標準税率 */
   RESIDENT_TAX_RATE: 0.1,
   

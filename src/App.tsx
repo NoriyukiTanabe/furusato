@@ -7,11 +7,7 @@ function App() {
   const [dependents, setDependents] = useState<number>(0)
   const [socialInsurance, setSocialInsurance] = useState<number>(0)
   const [medicalExpenses, setMedicalExpenses] = useState<number>(0)
-  const [result, setResult] = useState<{
-    maxDonation: number;
-    taxBenefit: number;
-    actualCost: number;
-  } | null>(null)
+  const [result, setResult] = useState<number | null>(null)
 
   const handleAnnualIncomeChange = (value: string) => {
     // カンマを除去して数値のみにする
@@ -117,16 +113,8 @@ function App() {
             </h2>
             <div className="space-y-4">
               <div className="flex justify-between items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-                <span className="text-gray-600 font-medium">上限額</span>
-                <span className="text-xl font-bold text-blue-600">{result.maxDonation.toLocaleString()}円</span>
-              </div>
-              <div className="flex justify-between items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-                <span className="text-gray-600 font-medium">税額控除額</span>
-                <span className="text-xl font-bold text-green-600">{result.taxBenefit.toLocaleString()}円</span>
-              </div>
-              <div className="flex justify-between items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-                <span className="text-gray-600 font-medium">実質負担額</span>
-                <span className="text-xl font-bold text-red-600">{result.actualCost.toLocaleString()}円</span>
+                <span className="text-gray-600 font-medium">ふるさと納税の上限額</span>
+                <span className="text-xl font-bold text-blue-600">{result.toLocaleString()}円</span>
               </div>
             </div>
           </div>
