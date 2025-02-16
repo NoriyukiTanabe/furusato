@@ -2,36 +2,44 @@ import { useState } from 'react'
 import { calculateFurusato } from './utils/furusato'
 
 function App() {
-  const [annualIncomeDisplay, setAnnualIncomeDisplay] = useState<string>('')
-  const [annualIncome, setAnnualIncome] = useState<number>(0)
-  const [dependents, setDependents] = useState<number>(0)
-  const [socialInsurance, setSocialInsurance] = useState<number>(0)
-  const [medicalExpenses, setMedicalExpenses] = useState<number>(0)
+  // 表示用の状態
+  const [formDisplay, setFormDisplay] = useState({
+    annualIncome: '',
+    socialInsurance: '',
+    medicalExpenses: ''
+  })
+  // 実際の数値データ
+  const [formData, setFormData] = useState({
+    annualIncome: 0,
+    dependents: 0,
+    socialInsurance: 0,
+    medicalExpenses: 0
+  })
   const [result, setResult] = useState<number | null>(null)
 
-  const handleAnnualIncomeChange = (value: string) => {
+  const handleNumberChange = (field: string, value: string, multiplier: number = 1) => {
     // カンマを除去して数値のみにする
     const numericValue = value.replace(/,/g, '')
     if (numericValue === '') {
-      setAnnualIncome(0)
-      setAnnualIncomeDisplay('')
+      setFormData(prev => ({ ...prev, [field]: 0 }))
+      setFormDisplay(prev => ({ ...prev, [field]: '' }))
       return
     }
     
     const number = Number(numericValue)
     if (!isNaN(number)) {
-      setAnnualIncome(number)
+      setFormData(prev => ({ ...prev, [field]: number * multiplier }))
       // 3桁区切りでカンマを追加
-      setAnnualIncomeDisplay(number.toLocaleString())
+      setFormDisplay(prev => ({ ...prev, [field]: number.toLocaleString() }))
     }
   }
 
   const handleCalculate = () => {
     const result = calculateFurusato(
-      annualIncome * 10000,
-      dependents,
-      socialInsurance,
-      medicalExpenses
+      formData.annualIncome * 10000,
+      formData.dependents,
+      formData.socialInsurance,
+      formData.medicalExpenses
     )
     setResult(result)
   }
@@ -51,8 +59,8 @@ function App() {
               <input
                 type="text"
                 inputMode="numeric"
-                value={annualIncomeDisplay}
-                onChange={(e) => handleAnnualIncomeChange(e.target.value)}
+                value={formDisplay.annualIncome}
+                onChange={(e) => handleNumberChange('annualIncome', e.target.value)}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50"
                 placeholder="例：400"
               />
@@ -63,8 +71,8 @@ function App() {
               </label>
               <input
                 type="number"
-                value={dependents}
-                onChange={(e) => setDependents(Number(e.target.value))}
+                value={formData.dependents}
+                onChange={(e) => setFormData(prev => ({ ...prev, dependents: Number(e.target.value) }))}
                 min="0"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50"
                 placeholder="例：2"
@@ -75,12 +83,12 @@ function App() {
                 社会保険料（年間）
               </label>
               <input
-                type="number"
-                value={socialInsurance}
-                onChange={(e) => setSocialInsurance(Number(e.target.value))}
-                min="0"
+                type="text"
+                inputMode="numeric"
+                value={formDisplay.socialInsurance}
+                onChange={(e) => handleNumberChange('socialInsurance', e.target.value)}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50"
-                placeholder="例：500000"
+                placeholder="例：500,000"
               />
             </div>
             <div className="space-y-2">
@@ -88,12 +96,12 @@ function App() {
                 医療費（年間）
               </label>
               <input
-                type="number"
-                value={medicalExpenses}
-                onChange={(e) => setMedicalExpenses(Number(e.target.value))}
-                min="0"
+                type="text"
+                inputMode="numeric"
+                value={formDisplay.medicalExpenses}
+                onChange={(e) => handleNumberChange('medicalExpenses', e.target.value)}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50"
-                placeholder="例：200000"
+                placeholder="例：200,000"
               />
             </div>
           </div>
